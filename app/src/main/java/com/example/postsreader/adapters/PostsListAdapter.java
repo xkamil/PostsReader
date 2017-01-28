@@ -37,8 +37,6 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
         holder.bind(posts.get(position));
     }
 
-
-
     @Override
     public int getItemCount() {
         return posts.size();
