@@ -1,4 +1,4 @@
-package com.example.postsreader.utils;
+package com.example.postsreader.Api;
 
 /**
  * Created by kamil_pc on 2017-01-28.

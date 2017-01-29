@@ -10,7 +10,7 @@
         android:padding="@dimen/padding_1"
         android:textSize="@dimen/text_size_3"
         android:textStyle="bold"
-        android:id="@+id/post_title"
+        android:id="@+id/comment_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sample title"/>
@@ -18,7 +18,16 @@
     <TextView
         android:padding="@dimen/padding_1"
         android:textSize="@dimen/text_size_2"
-        android:id="@+id/post_body"
+        android:id="@+id/comment_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sample content sample content"/>
+
+    <TextView
+        android:layout_gravity="end"
+        android:padding="@dimen/padding_1"
+        android:textSize="@dimen/text_size_2"
+        android:id="@+id/comment_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sample content sample content"/>

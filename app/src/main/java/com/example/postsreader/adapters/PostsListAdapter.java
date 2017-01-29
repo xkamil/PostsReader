@@ -6,24 +6,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.postsreader.DTO.PostDTO;
-import com.example.postsreader.PostsListActivity;
 import com.example.postsreader.R;
 
 import java.util.List;
 
-public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.PostViewHolder>{
+public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.PostViewHolder> {
 
     private List<PostDTO> posts;
     private LayoutInflater inflater;
     private Context context;
+    private ClickListener listener;
 
-    public PostsListAdapter(Context context, List<PostDTO> posts){
+    public PostsListAdapter(Context context, List<PostDTO> posts, ClickListener listener) {
         this.posts = posts;
         inflater = LayoutInflater.from(context);
         this.context = context;
+        this.listener = listener;
     }
 
     @Override
@@ -54,9 +54,17 @@ public class PostsListAdapter extends RecyclerView.Adapter<PostsListAdapter.Post
             body = (TextView) itemView.findViewById(R.id.post_body);
         }
 
-        public void bind(final PostDTO post){
+        public void bind(final PostDTO post) {
             title.setText(post.getTitle());
             body.setText(post.getBody());
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onClick(post);
+                }
+            });
+
         }
     }
 }
