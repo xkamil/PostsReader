@@ -1,42 +1,59 @@
 package com.example.postsreader.Api;
 
-import android.content.res.Resources;
-import android.util.Log;
+import android.os.AsyncTask;
 
 import com.example.postsreader.DTO.PostDTO;
 import com.example.postsreader.utils.HttpResponse;
 import com.example.postsreader.utils.JsonToObjectMapper;
 import com.example.postsreader.utils.NetworkUtils;
-import com.example.postsreader.utils.NotFoundException;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
-
 public class ApiClient {
-    private static String TAG = ApiClient.class.getSimpleName();
-    private static String HOST = "https://jsonplaceholder.typicode.com";
+    private static final String HOST = "https://jsonplaceholder.typicode.com";
     private JsonToObjectMapper mapper;
 
     public ApiClient() {
         this.mapper = new JsonToObjectMapper();
     }
 
-    public List<PostDTO> getPosts() throws IOException{
-            HttpResponse response = getResponse("/posts");
-            return mapper.mapPosts(response.getBody());
+    public void getPosts(final ResponseHandler<List<PostDTO>> responseHandler) {
+        new AsyncTask<Void, Void, List<PostDTO>>() {
+            @Override
+            protected List<PostDTO> doInBackground(Void... params) {
+                try {
+                    HttpResponse response = getResponse("/posts");
+                    return mapper.mapPosts(response.getBody());
+
+                } catch (IOException ex) {
+                    responseHandler.handleClientException();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(List<PostDTO> posts) {
+                responseHandler.handleResponse(posts);
+            }
+        }.execute();
     }
 
-    public PostDTO getPost(int id) throws IOException, NotFoundException {
-        HttpResponse response = getResponse("/posts/" + id);
-
-        if (response.getStatusCode() == HTTP_NOT_FOUND){
-            throw new NotFoundException();
-        }
-
-        return mapper.mapPost(response.getBody());
+    public void getPost(final int id, final ResponseHandler<PostDTO> responseHandler) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    HttpResponse response = getResponse("/posts/" + id);
+                    PostDTO post = mapper.mapPost(response.getBody());
+                    responseHandler.handleResponse(post);
+                } catch (IOException ex) {
+                    responseHandler.handleClientException();
+                }
+                return null;
+            }
+        }.execute();
     }
 
     private HttpResponse getResponse(String path) throws IOException {
